@@ -20,12 +20,16 @@ namespace simpleColorMatch {
         return Math.sqrt(dr * dr + dg * dg + db * db)
     }
 
-    // 匹配最接近的颜色
-    // 输入：VEML6040 采集到的 RGB 数组 [R,G,B,W]
+    /**
+         * 匹配最接近的颜色
+         * @param rgbw 传感器读取的 RGBW 数组
+         */
+    //% block="匹配颜色 %rgbw"
+    //% weight=100
     export function matchColor(rgbw: number[]): string {
         let rgb = [rgbw[0], rgbw[1], rgbw[2]]  // 忽略 W
         let minDist = 999999
-        let closest = "Unknown"
+        let closest = "未知"
         for (let s of samples) {
             let dist = colorDistance(rgb, s.rgb)
             if (dist < minDist) {
