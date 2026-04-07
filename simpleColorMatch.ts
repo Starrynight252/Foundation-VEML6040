@@ -26,6 +26,7 @@ namespace simpleColorMatch {
          */
     //% block="匹配颜色 %rgbw"
     //% weight=100
+    //% rgbw.defl=[]
     export function matchColor(rgbw: number[]): string {
         let rgb = [rgbw[0], rgbw[1], rgbw[2]]  // 忽略 W
         let minDist = 999999
