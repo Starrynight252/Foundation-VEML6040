@@ -1,3 +1,4 @@
+
 /**
  * VEML6040 Color Sensor
  */
@@ -45,9 +46,9 @@ namespace veml6040 {
     function setConfiguration() {
         let buf = pins.createBuffer(3)
         buf[0] = REG_CONF;
-        buf[1] = IT_320MS | AF_AUTO | SD_DISABLE;
+        buf[1] = IT_320MS | AF_AUTO | SD_ENABLE;
         buf[2] = 0;
-        pins.i2cWriteBuffer(VEML6040_ADDR, buf);
+        pins.i2cWriteBuffer(VEML6040_ADDR, buf, false);
     }
 
     /**
@@ -57,8 +58,6 @@ namespace veml6040 {
     export function init(): void {
 
         if (!initialized) {
-            //writeReg(VEML6040_ADDR, 0x0000);
-
             setConfiguration();
             // 等待时间
             basic.pause(320);
@@ -72,45 +71,41 @@ namespace veml6040 {
         let regBuf = pins.createBuffer(1)
         regBuf[0] = reg
 
-        // false = repeated start
         pins.i2cWriteBuffer(VEML6040_ADDR, regBuf, false)
-
-        let data = pins.i2cReadBuffer(VEML6040_ADDR, 2)
+        // pins.i2cWriteNumber(VEML6040_ADDR, reg, NumberFormat.UInt8BE, false)
+        let data = pins.i2cReadBuffer(VEML6040_ADDR, 2, false)
 
         return data[0] | (data[1] << 8)
     }
 
     // ====== RGB ======
-
-    //% block="read red"
-    export function red(): number {
+    function red(): number {
         init()
+        basic.pause(20);
         return readReg(REG_RED)
     }
 
-    //% block="read green"
-    export function green(): number {
+    function green(): number {
         init()
+        basic.pause(20);
         return readReg(REG_GREEN)
     }
 
-    //% block="read blue"
-    export function blue(): number {
+    function blue(): number {
         init()
+        basic.pause(20);
         return readReg(REG_BLUE)
     }
 
-    //% block="read white"
-    export function white(): number {
+    function white(): number {
         init()
+        basic.pause(20);
         return readReg(REG_WHITE)
     }
 
 
     // ====== CCT ======
-
-    //% block="read CCT"
-    export function cct(): number {
+    function cct(): number {
         let r = red()
         let g = green()
         let b = blue()
@@ -119,5 +114,21 @@ namespace veml6040 {
         let cct = 4278.6 * Math.pow(ccti, -1.2455)
 
         return Math.round(cct)
+    }
+
+    //% block="readAllColour"
+    export function readAllColour(): number[] {
+        init()  // 确保初始化一次
+
+        // 读取各通道
+        let r = readReg(REG_RED)
+        basic.pause(320)
+        let g = readReg(REG_GREEN)
+        basic.pause(320)
+        let b = readReg(REG_BLUE)
+        basic.pause(320)
+        let w = readReg(REG_WHITE)
+
+        return [r, g, b, w]
     }
 };
