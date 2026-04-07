@@ -1,3 +1,8 @@
+/**
+ * VEML6040 Color Sensor
+ */
+//% weight=100 color=#AA278D icon="\uf043"
+namespace veml6040 {
 
     // ===== I2C 地址 =====
     const VEML6040_ADDR = 0x10
@@ -24,8 +29,8 @@
     // ===== 自动 / 强制 =====
     const AF_AUTO = 0x00
     // const AF_FORCE = 0x02
-    const SD_ENABLE =   0x00
-    const SD_DISABLE =  0x01
+    const SD_ENABLE = 0x00
+    const SD_DISABLE = 0x01
 
     // ===== Lux 灵敏度（Green 通道）=====
     const GSENS_40MS = 0.25168
