@@ -1,8 +1,3 @@
-
-/**
- * VEML6040 Color Sensor
- */
-//% weight=100 color=#AA278D icon="\uf043"
 namespace veml6040 {
 
     // ===== I2C 地址 =====
@@ -41,7 +36,11 @@ namespace veml6040 {
     // const GSENS_640MS = 0.01573
     // const GSENS_1280MS = 0.007865
 
-    let initialized = false
+    let initialized = false;
+    let redBuffer = 0;
+    let greenBuffer = 0;
+    let blueBuffer = 0;
+    let whiteBuffer = 0;
 
     function setConfiguration() {
         let buf = pins.createBuffer(3)
@@ -66,7 +65,7 @@ namespace veml6040 {
         }
     }
 
-
+    /* 读取寄存器 */
     function readReg(reg: number): number {
         let regBuf = pins.createBuffer(1)
         regBuf[0] = reg
@@ -78,57 +77,56 @@ namespace veml6040 {
         return data[0] | (data[1] << 8)
     }
 
+    /*读取全部颜色 */
+    //% block="read AllColour"
+    export function readAllColour(): void {
+        init()  // 确保初始化一次
+
+        // 读取各通道
+        redBuffer = readReg(REG_RED)
+        basic.pause(320)
+        greenBuffer = readReg(REG_GREEN)
+        basic.pause(320)
+        blueBuffer = readReg(REG_BLUE)
+        basic.pause(320)
+        whiteBuffer = readReg(REG_WHITE)
+
+        //return [redBuffer, greenBuffer, blueBuffer, whiteBuffer]
+    }
+
+
     // ====== RGB ======
-    function red(): number {
+    //% block="read Red"
+    export function readRed(): number {
         init()
         basic.pause(20);
         return readReg(REG_RED)
     }
-
-    function green(): number {
+    //% block="read Green"
+    export function readGreen(): number {
         init()
         basic.pause(20);
         return readReg(REG_GREEN)
     }
-
-    function blue(): number {
+    //% block="read Blue"
+    export function readBlue(): number {
         init()
         basic.pause(20);
         return readReg(REG_BLUE)
     }
-
-    function white(): number {
+    //% block="read White"
+    export function readWhite(): number {
         init()
         basic.pause(20);
         return readReg(REG_WHITE)
     }
-
-
+    
     // ====== CCT ======
-    function cct(): number {
-        let r = red()
-        let g = green()
-        let b = blue()
-
-        let ccti = ((r - b) / g) + 0.5;
+    //% block="read CCT"
+    export function readCCT(): number {
+        let ccti = ((redBuffer - greenBuffer) / blueBuffer) + 0.5;
         let cct = 4278.6 * Math.pow(ccti, -1.2455)
 
         return Math.round(cct)
     }
-
-    //% block="readAllColour"
-    export function readAllColour(): number[] {
-        init()  // 确保初始化一次
-
-        // 读取各通道
-        let r = readReg(REG_RED)
-        basic.pause(320)
-        let g = readReg(REG_GREEN)
-        basic.pause(320)
-        let b = readReg(REG_BLUE)
-        basic.pause(320)
-        let w = readReg(REG_WHITE)
-
-        return [r, g, b, w]
-    }
-};
+}
