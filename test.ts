@@ -11,13 +11,13 @@
 
 veml6040.init()
 basic.forever(function () {
-veml6040.readAllColour()
-serial.writeValue("R", veml6040.readRed())
-serial.writeValue("G", veml6040.readGreen())
-serial.writeValue("B", veml6040.readBlue())
-serial.writeValue("W", veml6040.readWhite())
-serial.writeValue("CCT", veml6040.readCCT())
+    veml6040.readAllColour()
     basic.pause(500)
+    serial.writeValue("R", veml6040.readRed())
+    serial.writeValue("G", veml6040.readGreen())
+    serial.writeValue("B", veml6040.readBlue())
+    serial.writeValue("W", veml6040.readWhite())
+    serial.writeValue("CCT", veml6040.readCCT())
 })
 
 // basic.forever(function () {

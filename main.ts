@@ -98,27 +98,19 @@ namespace veml6040 {
     // ====== RGB ======
     //% block="read Red"
     export function readRed(): number {
-        init()
-        basic.pause(20);
-        return readReg(REG_RED)
+        return redBuffer
     }
     //% block="read Green"
     export function readGreen(): number {
-        init()
-        basic.pause(20);
-        return readReg(REG_GREEN)
+        return greenBuffer
     }
     //% block="read Blue"
     export function readBlue(): number {
-        init()
-        basic.pause(20);
-        return readReg(REG_BLUE)
+        return blueBuffer
     }
     //% block="read White"
     export function readWhite(): number {
-        init()
-        basic.pause(20);
-        return readReg(REG_WHITE)
+        return whiteBuffer
     }
     
     // ====== CCT ======
